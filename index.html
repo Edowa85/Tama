@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamakotsi</title>
+    <link rel="stylesheet" href="style.css" >
+    
+</head>
+<body>
+
+    <div  class="logo"><h1 class="h11">Tamakotsi Bamakotsi</h1></div>
+    
+
+    <div class="bg1">
+        
+        
+        
+
+        <div class="container">
+            <div class="area">
+                <div class="inputArea">
+                <input id="NameArea" type="text" placeholder="Write name here">
+                <button class="inputButton" id="betButton">Press</button>
+            </div>
+            <div class="allB">
+                <ul>
+                    <button class="button1" id="button1">Feed</button>
+                    <button class="button1" id="button2">Skate</button> 
+                    <button class="button1" id="button3">Sleep</button> 
+                </ul>
+            </div>
+        </div>
+    </div>
+
+        <!-- progress bars  -->
+        <div class="container">
+            <div class="area">
+                <img id="actionGif" class="gifA" src="" alt="Action GIF" style="width:200px; height:200px; display:none; margin-top:20px;">
+
+                <div class="bars-container">
+                    <div class="progress-section">
+                        
+                        <div class="progress-container">
+                            <div id="innerHungry" class="progress-circle">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        
+                        <div class="progress-container">
+                            <div id="innerRest" class="progress-circle">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="area">
+            <div class="statusbars">
+                <div id="stat1" class="statusbars1"></div>
+                <div id="stat2" class="statusbars2"></div>
+                <div id="stat3" class="statusbars3"></div>
+            </div>
+                <!-- <h3 id="stat"></h3> -->
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+
+        const b1 = document.getElementById("button1"); // Feed button
+        const b2 = document.getElementById("button2"); // Run button
+        const b3 = document.getElementById("button3"); // Sleep button
+        const BetN = document.getElementById("NameArea");
+        const betButton = document.getElementById("betButton");
+        const stat1 = document.getElementById("stat1");
+        const stat2 = document.getElementById("stat2");
+        const stat3 = document.getElementById("stat3");
+        const actionGif = document.getElementById("actionGif");
+        const hungryMeter = document.getElementById("innerHungry");
+        const restMeter = document.getElementById("innerRest");
+
+        b1.addEventListener("click", feed);
+        b2.addEventListener("click", run);
+        b3.addEventListener("click", sleep);
+        betButton.addEventListener("click", NameGiver);
+
+        let bet = {
+            name: "Unnamed",
+            weight: 5,
+            color: "White",
+            rest: 100,   // Start with full rest
+            fungry: 100, // Start with full hunger
+        };
+
+        function feed() {
+            bet.weight += 6;
+            bet.fungry = Math.min(bet.fungry + 20, 100); // Max 100%
+            updateStats();
+            showGif("fat.gif");
+        }
+
+        function NameGiver() {
+            bet.name = BetN.value.trim() || "Unnamed";
+            updateStats();
+        }
+
+        function run() {
+            bet.weight -= 5;
+            bet.fungry = Math.max(bet.fungry - 15, 0); // Min 0%
+            bet.rest = Math.max(bet.rest - 10, 0);     // Running decreases rest
+            if (bet.weight <= 0) {
+                showGif("dead.gif");
+            } else {
+                showGif("skate.gif");
+            }
+            updateStats();
+        }
+
+        function sleep() {
+            bet.rest = Math.min(bet.rest + 30, 100); // Max 100%
+            updateStats();
+            showGif("Bunny_sleeps.gif"); // Sleeping GIF
+        }
+        function updateStats() {
+
+            stat1.innerHTML = `Name: ${bet.name}`;
+            stat2.innerHTML = `Weight: ${bet.weight}`;
+            stat3.innerHTML = `Color: ${bet.color}`;
+            
+            // Update Hunger Bar
+            hungryMeter.style.background = `conic-gradient(#4CAF50 ${bet.fungry}%, lightgray 0%)`;
+
+            // Update Rest Bar
+            restMeter.style.background = `conic-gradient(#2196F3 ${bet.rest}%, lightgray 0%)`; // Blue for rest
+        }
+
+        function showGif(url) {
+            actionGif.src = url;
+            actionGif.style.display = "block";
+            setTimeout(() => {
+                actionGif.style.display = "none";
+            }, 3000);
+        }
+
+        // Decrease hunger and rest over time
+        setInterval(() => {
+            bet.fungry = Math.max(bet.fungry - 5, 0);
+            bet.rest = Math.max(bet.rest - 3, 0); // Rest decreases slower than hunger
+            updateStats();
+        }, 3000); // Update every 5 seconds
+
+        updateStats();
+
+    </script>
+
+</body>
+</html>
